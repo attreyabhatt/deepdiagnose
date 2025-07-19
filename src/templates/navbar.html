@@ -1,0 +1,48 @@
+<!-- Minimal Navbar -->
+<nav class="navbar navbar-expand-lg shadow-sm sticky-top">
+    <div class="container">
+        <a class="navbar-brand" href="/">🧠 DeepDiagnose</a>
+        <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMinimal">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarMinimal">
+            <ul class="navbar-nav ms-auto">
+                <!-- <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/' %}active{% endif %}" href="/">Home</a>
+                </li> -->
+                <li class="nav-item">
+                    <a class="nav-link {% if request.path == '/upload/' %}active{% endif %}"
+                        href="{% url 'upload_reports' %}">Diagnose</a>
+                </li>
+                <ul class="navbar-nav ms-auto">
+                    {% if user.is_authenticated %}
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                                <i class="fas fa-user"></i> {{ user.email }}
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li><a class="dropdown-item" href="{% url 'account_email' %}">
+                                    <i class="fas fa-envelope"></i> Manage Email
+                                </a></li>
+                                <li><a class="dropdown-item" href="{% url 'account_change_password' %}">
+                                    <i class="fas fa-key"></i> Change Password
+                                </a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="{% url 'account_logout' %}">
+                                    <i class="fas fa-sign-out-alt"></i> Logout
+                                </a></li>
+                            </ul>
+                        </li>
+                    {% else %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'account_login' %}">
+                                <i class="fas fa-sign-in-alt"></i> Login/Signup
+                            </a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </ul>
+        </div>
+    </div>
+</nav>

@@ -1,0 +1,43 @@
+# Byte-compiled / optimized / compiled files
+__pycache__/
+*.pyc
+*.pyd
+*.pyo
+*.egg-info/
+.Python
+build/
+dist/
+
+# Virtual environment
+env/
+venv/
+.venv/
+
+# Django specific
+*.sqlite3
+media/ # User uploaded media files (if not served from a separate storage)
+static_cdn/ # Collected static files (if not served from a separate storage)
+migrations/000*.py # Excluding initial migration files, if you prefer to regenerate them on fresh clones.
+# Note: In most cases, you should track migration files. This line is for specific workflows.
+
+# Sensitive information
+.env # Environment variables file
+settings_local.py # Local settings overrides
+
+# IDE specific files
+.idea/ # IntelliJ IDEA
+.vscode/ # VS Code
+*.sublime-project
+*.sublime-workspace
+.DS_Store # macOS specific
+
+# Logs and temporary files
+*.log
+*.tmp
+temp/
+
+# Other common exclusions
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/

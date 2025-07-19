@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block title %}Home | DeepDiagnose{% endblock %}
+{% load static %}
+
+{% block content %}
+<section class="container text-center py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-10 col-lg-8">
+      <h1 class="display-5 fw-semibold mb-4">🧠 DeepDiagnose</h1>
+      <p class="lead text-muted mb-4">
+        Upload medical reports and get AI-assisted diagnostics within seconds. <br>
+        Fast. Secure. Insightful.
+      </p>
+      <a href="{% url 'upload_reports' %}" class="btn btn-dark btn-lg px-4">Upload Report</a>
+    </div>
+  </div>
+</section>
+
+<section class="bg-light py-5">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-md-4 text-center">
+        <h5 class="fw-semibold">🔒 Privacy First</h5>
+        <p class="text-muted">Your data is encrypted and never shared.</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <h5 class="fw-semibold">⚡ Fast Analysis</h5>
+        <p class="text-muted">Receive insights in under a minute, powered by GPT-4.</p>
+      </div>
+      <div class="col-md-4 text-center">
+        <h5 class="fw-semibold">📄 Any Format</h5>
+        <p class="text-muted">Supports PDFs, images, and scanned reports.</p>
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock %}
