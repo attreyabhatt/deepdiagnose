@@ -194,9 +194,9 @@ if USE_SPACES:
                 "bucket_name": AWS_STORAGE_BUCKET_NAME,
                 "endpoint_url": AWS_S3_ENDPOINT_URL,
                 "region_name": AWS_S3_REGION_NAME,
-                "default_acl": "public-read",
+                "default_acl": "private",
                 "file_overwrite": False,
-                "querystring_auth": False,
+                "querystring_auth": True,
                 "location": "media",  # This creates a media folder in your bucket
             },
         },
@@ -209,15 +209,15 @@ if USE_SPACES:
     MEDIA_URL = f"{AWS_S3_ENDPOINT_URL}/{AWS_STORAGE_BUCKET_NAME}/media/"
     
     # Additional S3 settings for better compatibility
-    AWS_DEFAULT_ACL = 'public-read'
+    AWS_DEFAULT_ACL = 'private'
+    AWS_QUERYSTRING_AUTH = True # This ensures signed URLs for private files
     AWS_S3_FILE_OVERWRITE = False
-    AWS_QUERYSTRING_AUTH = False
     AWS_S3_SIGNATURE_VERSION = 's3v4'
     
     # Optional: Custom domain if you have CDN setup
-    AWS_S3_CUSTOM_DOMAIN = config("DO_SPACES_CDN_DOMAIN", default=None)
-    if AWS_S3_CUSTOM_DOMAIN:
-        MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+    # AWS_S3_CUSTOM_DOMAIN = config("DO_SPACES_CDN_DOMAIN", default=None)
+    # if AWS_S3_CUSTOM_DOMAIN:
+    #     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
 
 else:
     # Local development settings
