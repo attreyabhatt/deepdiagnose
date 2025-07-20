@@ -21,6 +21,6 @@ from deepdiagnose.views import home
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', home, name='home'),
-    path('reports/', include('reports.urls')),
+    path('analyzer/', include('analyzer.urls')),
     path('accounts/', include('allauth.urls')),
 ]

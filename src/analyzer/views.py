@@ -33,7 +33,7 @@ def upload_reports(request):
 
     existing_reports = ReportFile.objects.filter(user=request.user).order_by('-uploaded_at')
 
-    return render(request, "reports/upload.html", {
+    return render(request, "analyzer/main.html", {
         "uploaded": uploaded_files,
         "errors": errors,
         "existing_reports": existing_reports,

@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     'allauth.account',
     
     # custom apps
-    'reports',
+    'analyzer',
 ]
 
 # Required for allauth

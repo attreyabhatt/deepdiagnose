@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="container">
+    <!-- Compact Report Showcase -->
+    <div class="row g-1" id="report-showcase">
+        {% if existing_reports %}
+        {% for report in existing_reports %}
+        <div class="col-xl-2 col-lg-3 col-md-4 col-6">
+            <div class="card border-0 shadow-sm h-100" style="max-height: 70px;">
+                <div class="row g-0 h-100">
+                    <!-- Preview Column -->
+                    <div class="col-3">
+                        <div class="h-100 d-flex align-items-center justify-content-center"
+                            style="background: #f8f9fa; border-radius: 0.375rem 0 0 0.375rem;">
+                            {% with file_url=report.file.url|lower %}
+                            {% if ".pdf" in file_url %}
+                            <i class="bi bi-file-earmark-pdf text-danger" style="font-size: 1rem;"></i>
+                            {% elif ".jpg" in file_url or ".jpeg" in file_url or ".png" in file_url %}
+                            <img src="{{ report.file.url }}" alt="Preview" class="img-fluid w-100 h-100"
+                                style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+                            {% else %}
+                            <i class="bi bi-file-earmark-text text-primary" style="font-size: 1rem;"></i>
+                            {% endif %}
+                            {% endwith %}
+                        </div>
+                    </div>
+
+                    <!-- Content Column -->
+                    <div class="col-9">
+                        <div class="card-body p-1 d-flex flex-column h-100">
+                            <div class="" style="font-size: 0.7rem; line-height: 1.1; font-weight: 500;"
+                                title="{{ report.original_name }}">
+                                {{ report.original_name }}
+                            </div>
+
+                            <div class="mt-auto d-flex justify-content-between align-items-center">
+                                {% with file_url=report.file.url|lower %}
+                                {% if ".pdf" in file_url %}
+                                <span class="badge bg-danger-subtle text-danger"
+                                    style="font-size: 0.55rem; padding: 1px 4px;">PDF</span>
+                                {% elif ".jpg" in file_url or ".jpeg" in file_url or ".png" in file_url %}
+                                <span class="badge bg-success-subtle text-success"
+                                    style="font-size: 0.55rem; padding: 1px 4px;">IMG</span>
+                                {% else %}
+                                <span class="badge bg-primary-subtle text-primary"
+                                    style="font-size: 0.55rem; padding: 1px 4px;">DOC</span>
+                                {% endif %}
+                                {% endwith %}
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Rest of your original upload form -->
+    <div class="row mt-4">
+        <div class="col-md-4">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="mb-3">
+                    <input class="form-control" type="file" id="fileInput" name="files" multiple required>
+                    <small class="text-muted">You can upload PDFs, images, or documents.</small>
+                </div>
+                <div class="d-grid">
+                    <button type="submit" class="btn btn-primary btn-sm">Upload Reports</button>
+                </div>
+            </form>
+
+            {% if errors %}
+            <div class="alert alert-danger mt-4">
+                <strong>Upload errors:</strong>
+                <ul class="mb-0">
+                    {% for error in errors %}
+                    <li>{{ error }}</li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<style>
+    .card:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1) !important;
+        transition: all 0.2s ease;
+    }
+</style>
+
+{% endblock %}
