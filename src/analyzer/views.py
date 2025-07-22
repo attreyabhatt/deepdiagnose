@@ -1,41 +1,70 @@
 from django.shortcuts import render
-from django.contrib.auth.decorators import login_required
-from .models import ReportFile
 from django.utils.timezone import now
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_protect
+from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
+from .models import ReportFile,MedicalCase
+from django.db.models import Prefetch
+from django.template.loader import render_to_string
 
-@login_required
-def upload_reports(request):
-    uploaded_files = []
-    errors = []
-
-    if request.method == "POST":
-        files = request.FILES.getlist("files")
-        for f in files:
-            try:
-                # Automatically saved to correct user path by model's upload_to
-                report_file = ReportFile.objects.create(
-                    user=request.user,
-                    file=f,
-                    original_name=f.name,
-                    uploaded_at=now(),
-                )
-
-                # Generate signed URL (requires querystring_auth = True)
-                signed_url = report_file.file.url
-                uploaded_files.append({
-                    "url": signed_url,
-                    "name": f.name,
-                })
-
-
-            except Exception as e:
-                errors.append(f"{f.name}: {str(e)}")
-
-    existing_reports = ReportFile.objects.filter(user=request.user).order_by('-uploaded_at')
-
+def diagnose_home(request):
+    medical_cases = MedicalCase.objects.filter(user=request.user).prefetch_related(
+        Prefetch('files', queryset=ReportFile.objects.all())
+    )
+    if medical_cases.exists():
+        pass
+    else:
+        medical_cases = MedicalCase.objects.create(
+                        user=request.user,
+        )
+    
     return render(request, "analyzer/main.html", {
-        "uploaded": uploaded_files,
-        "errors": errors,
-        "existing_reports": existing_reports,
+        'medical_cases': medical_cases,
     })
 
+allowed_content_types = ['application/pdf', 'image/jpeg', 'image/png', 'image/gif', 'image/bmp', 'image/webp']
+
+def upload_reports(request):
+    
+    if request.method == "POST" and request.user.is_authenticated:
+        files = request.FILES.getlist('files')
+        created_reports = []
+        errors = []
+
+        for file in files:
+            if file.content_type not in allowed_content_types:
+                errors.append(f"{file.name}: Unsupported file type")
+                continue
+            try:
+                report = ReportFile.objects.create(
+                    user=request.user,
+                    file=file,
+                    original_name=file.name
+                )
+                created_reports.append(report)
+            except Exception as e:
+                errors.append(f"{file.name}: {str(e)}")
+
+        if created_reports:
+            html = ""
+            for report in created_reports:
+                html += render_to_string("partials/report_card.html", {"report": report})
+            return JsonResponse({"success": True, "new_reports_html": html})
+        return JsonResponse({"success": False, "errors": errors})
+    
+    return JsonResponse({"success": False, "errors": ["Unauthorized or invalid request"]})
+
+@require_POST
+@login_required
+@csrf_protect
+def delete_report(request):
+    report_id = request.POST.get("report_id")
+    try:
+        report = ReportFile.objects.get(id=report_id, user=request.user)
+        if report.file:
+            report.file.delete(save=False)
+        report.delete()
+        return JsonResponse({"success": True})
+    except ReportFile.DoesNotExist:
+        return JsonResponse({"success": False, "error": "Report not found."}, status=404)

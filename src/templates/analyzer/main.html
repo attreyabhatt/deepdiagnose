@@ -1,15 +1,50 @@
 {% extends "base.html" %}
+{% load static %}
+
 {% block content %}
 
+{% block extra_styles %}
+<link rel="stylesheet" href="{% static 'analyzer/style.css' %}">
+{% endblock %}
+
 <div class="container">
-    <!-- Compact Report Showcase -->
+
+    <!-- <div class="row mb-3">
+        <div class="col">
+            <h1>Your Medical Cases and Reports</h1>
+            {% for case in medical_cases %}
+            <div style="border:1px solid #ccc; margin-bottom: 20px; padding: 10px;">
+                <h2>{{ case.full_name }} ({{ case.age }} years old)</h2>
+                <p>Status: {{ case.status }}</p>
+                <p>Diagnosis: {{ case.diagnosis }}</p>
+
+                <h3>Report Files:</h3>
+                {% if case.files.all %}
+                <ul>
+                    {% for file in case.files.all %}
+                    <li>
+                        <a href="{{ file.file.url }}">{{ file.original_name }}</a>
+                        (Uploaded: {{ file.uploaded_at|date:"Y-m-d H:i" }})
+                    </li>
+                    {% endfor %}
+                </ul>
+                {% else %}
+                <p>No reports uploaded for this case.</p>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </div> -->
+
+
+    <!-- uploaded reports showcase cards -->
     <div class="row g-1" id="report-showcase">
         {% if existing_reports %}
         {% for report in existing_reports %}
         <div class="col-xl-2 col-lg-3 col-md-4 col-6">
             <div class="card border-0 shadow-sm h-100" style="max-height: 70px;">
                 <div class="row g-0 h-100">
-                    <!-- Preview Column -->
+                    <!-- Preview image Column -->
                     <div class="col-3">
                         <div class="h-100 d-flex align-items-center justify-content-center"
                             style="background: #f8f9fa; border-radius: 0.375rem 0 0 0.375rem;">
@@ -19,6 +54,7 @@
                             {% elif ".jpg" in file_url or ".jpeg" in file_url or ".png" in file_url %}
                             <img src="{{ report.file.url }}" alt="Preview" class="img-fluid w-100 h-100"
                                 style="object-fit: cover; border-radius: 0.375rem 0 0 0.375rem;">
+
                             {% else %}
                             <i class="bi bi-file-earmark-text text-primary" style="font-size: 1rem;"></i>
                             {% endif %}
@@ -47,9 +83,12 @@
                                     style="font-size: 0.55rem; padding: 1px 4px;">DOC</span>
                                 {% endif %}
                                 {% endwith %}
-
+                                <input type="hidden" id="csrf_token" value="{{ csrf_token }}">
+                                <button type="button" class="btn-close delete-report-btn" aria-label="Close"
+                                    data-report-id="{{ report.id }}" style="font-size: 0.65rem;"></button>
 
                             </div>
+
                         </div>
                     </div>
                 </div>
@@ -57,20 +96,32 @@
         </div>
         {% endfor %}
         {% endif %}
+
+
+
     </div>
 
-    <!-- Rest of your original upload form -->
+    <!-- upload form -->
     <div class="row mt-4">
         <div class="col-md-4">
-            <form method="post" enctype="multipart/form-data">
+            <form id="ajaxUploadForm" enctype="multipart/form-data">
                 {% csrf_token %}
+                <input type="hidden" id="csrf_token" name="csrfmiddlewaretoken" value="{{ csrf_token }}">
+
                 <div class="mb-3">
-                    <input class="form-control" type="file" id="fileInput" name="files" multiple required>
+                    <div id="upload-status" class="my-2" style="display: none;">
+                        <div class="d-flex align-items-center text-muted" style="font-size: 0.9rem;">
+                            <div class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></div>
+                            Uploading file(s)...
+                        </div>
+                    </div>
+                    <input class="form-control" accept=".pdf, image/*" type="file" id="fileInput" name="files" multiple
+                        required>
                     <small class="text-muted">You can upload PDFs, images, or documents.</small>
                 </div>
-                <div class="d-grid">
+                <!-- <div class="d-grid">
                     <button type="submit" class="btn btn-primary btn-sm">Upload Reports</button>
-                </div>
+                </div> -->
             </form>
 
             {% if errors %}
@@ -87,12 +138,9 @@
     </div>
 </div>
 
-<style>
-    .card:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 0.25rem 0.5rem rgba(0, 0, 0, 0.1) !important;
-        transition: all 0.2s ease;
-    }
-</style>
+{% endblock %}
 
+{% block extra_scripts %}
+<script src="{% static 'analyzer/delete_reports.js' %}"></script>
+<script src="{% static 'analyzer/upload_reports.js' %}"></script>
 {% endblock %}

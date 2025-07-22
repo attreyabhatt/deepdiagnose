@@ -1,0 +1,112 @@
+🧱 Core MVP Components
+1. User Interface (Frontend)
+Simple, step-by-step input flow:
+
+Demographics: Age, gender, known conditions.
+
+Timeline: When symptoms began, progression.
+
+Current symptoms (structured + free text).
+
+Uploaded docs (optional for now, maybe later).
+
+Dashboard shows:
+
+Top 3–5 possible diagnoses (common + rare).
+
+Layperson explanation for each.
+
+“Questions to ask your doctor.”
+
+“Tests often associated with this condition.”
+
+🛠️ Tech: React / Flutter / Swift (depending on target)
+
+2. Inference Engine (Backend)
+This is where your real value sits.
+
+a. LLM Layer
+Use GPT-4 (or Claude, or Mistral) to:
+
+Interpret free-text symptom descriptions.
+
+Convert into structured form: [symptom, duration, severity, progression].
+
+Generate natural-language summaries and explanations.
+
+b. Diagnosis Reasoning Layer
+Match symptoms to possible conditions using:
+
+Public datasets like:
+
+Orphanet (rare diseases)
+
+UMLS, SNOMED CT
+
+PubMed abstracts (for validation)
+
+Use rules + scoring logic (e.g., Bayesian or heuristic-based matching).
+
+Optionally fine-tune or prompt LLM with case study patterns.
+
+c. Suggestion Engine
+Based on likely diagnoses:
+
+Suggest next-step tests (e.g., “ANA panel”, “MRI brain”).
+
+Suggest specific questions (“Could this be autoimmune?”, “Has MS been ruled out?”).
+
+🛠️ Tech: Python (FastAPI or Flask), vector store (e.g., FAISS), LLM API (OpenAI/GPT-4 or similar)
+
+3. Database
+Store:
+
+User sessions (symptoms, results, feedback).
+
+Mapped medical terms (SNOMED IDs, disease metadata).
+
+Diagnostic “playbooks” for common/rare diseases.
+
+🛠️ Tech: PostgreSQL + embedding DB (for semantically searching symptoms)
+
+4. Basic Feedback Loop
+Ask: “Was this helpful?” / “Was a diagnosis eventually made?”
+
+Use this over time to refine the accuracy (start simple, don’t overfit).
+
+🧪 Example User Flow
+"My sister has had recurring fevers, joint pain, and fatigue for 3 months. Doctors checked for infections but found nothing. She's 28."
+
+User inputs:
+
+Age, gender, key symptoms, duration.
+
+Notes that infections ruled out.
+
+DeepDiagnosis responds:
+
+Possible conditions: Lupus (SLE), Adult-onset Still's Disease, Lyme disease (late stage).
+
+Explains why each could match.
+
+Suggests: ANA test, inflammatory markers, “Ask if autoimmune workup has been done.”
+
+User can export or screenshot this for their next appointment.
+
+🚀 MVP Timeline Estimate (Lean Team)
+Task	Time (est.)
+UI/UX design	1 week
+Frontend (basic form + dashboard)	2 weeks
+LLM + symptom parser	1 week
+Diagnosis engine + scoring	2–3 weeks
+Integration + testing	1 week
+Feedback system	1 week
+Total (initial MVP)	~6–8 weeks
+
+✅ How to Differentiate
+Rare diseases as first-class citizens.
+
+Language designed for non-medical users.
+
+Empowerment: "What could this be? What should we ask?"
+

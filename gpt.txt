@@ -1,0 +1,13 @@
+My uncle was in ICU for a month and then ventilator for two weeks but the doctors weren't able to diagnose what illness he had till the end.
+
+So I want build an app that can identify rare diseases or unconventional diagnosis especially for the friends and family. I feel it makes them overcome there felling of helplessness. I was thinking of starting with an MVP of just a basic diagnosis.
+
+But I feel making this app would just be wrapper around something like chatgpt. What do you think? You can be honest. Is this idea worth pursuing or not
+
+
+
+
+
+I have already started working on it. I am using Django, Postgresql (digital ocean) Digital ocean space ( for report uploads ) and bootstrap 5 for frontend. I was also thinking of using inference LLama 3.3 70b digital ocean AI Agent new feature. 
+
+I have currently built the authentication using django all-auth. And have built the upload feature almost 90%. I just need help with upload files with ajax. 
